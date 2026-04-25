@@ -8,17 +8,7 @@ const Preloader: React.FC = () => {
       initial={{ opacity: 1 }}
       exit={{ opacity: 0, y: -20, transition: { duration: 0.8, ease: "easeInOut" } }}
     >
-      {/* Logo image */}
-      <motion.img
-        src="/assurant-logo.png"
-        alt="Assurant Home Loans"
-        className="w-24 h-24 object-contain"
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-      />
-      
-      <div className="relative overflow-hidden mt-6">
+      <div className="relative overflow-hidden">
         <motion.h1
           className="font-serif text-4xl md:text-6xl tracking-wider text-brand-400"
           initial={{ y: 100, opacity: 0 }}
