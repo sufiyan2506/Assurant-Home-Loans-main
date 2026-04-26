@@ -23,7 +23,8 @@ const Navbar: React.FC<NavbarProps> = ({ onOpenInquiry }) => {
     setActiveDropdown(null);
   }, [location]);
 
-  const navLinks = [
+  const navLinks: { name: string; href: string; children?: { name: string; href: string }[] }[] = [
+    { name: 'Home', href: '/' },
     { 
       name: 'Loan Programs', 
       href: '/mortgage/purchase-loans',
@@ -35,36 +36,15 @@ const Navbar: React.FC<NavbarProps> = ({ onOpenInquiry }) => {
         { name: 'Jumbo loans', href: '/mortgage/jumbo-loans' },
         { name: 'USDA loans', href: '/mortgage/usda-loans' },
         { name: 'Commercial loans', href: '/mortgage/commercial-loans' },
-      ]
-    },
-    { 
-      name: 'Refinance', 
-      href: '/refinance/rate-term-refinance',
-      children: [
-        { name: 'Rate & term', href: '/refinance/rate-term-refinance' },
+        { name: 'Refinance', href: '/refinance/rate-term-refinance' },
         { name: 'Cash-out refi', href: '/refinance/cash-out-refinance' },
         { name: 'Reverse mortgage', href: '/refinance/reverse-mortgage' },
-      ]
-    },
-    { 
-      name: 'Investors', 
-      href: '/investors/dscr-loans',
-      children: [
         { name: 'DSCR loans', href: '/investors/dscr-loans' },
         { name: 'Bank statement', href: '/investors/bank-statement-loans' },
         { name: 'Non-QM loans', href: '/investors/non-qm-loans' },
       ]
     },
-    { 
-      name: 'Apply', 
-      href: '/closings/apply',
-      children: [
-        { name: 'Apply now', href: '/closings/apply' },
-        { name: 'Pre-qualification', href: '/closings/pre-qualification' },
-        { name: 'Upload documents', href: '/closings/upload-documents' },
-        { name: 'Resume application', href: '/closings/resume-application' },
-      ]
-    },
+    { name: 'Apply', href: '/closings/apply' },
     { 
       name: 'Company', 
       href: '/company/about',
@@ -76,7 +56,7 @@ const Navbar: React.FC<NavbarProps> = ({ onOpenInquiry }) => {
     },
   ];
 
-  const isActive = (href: string) => location.pathname === href || location.pathname.startsWith(href.split('/').slice(0, 3).join('/'));
+  const isActive = (href: string) => location.pathname === href || (href !== '/' && location.pathname.startsWith(href.split('/').slice(0, 3).join('/')));
 
   return (
     <>
@@ -94,45 +74,44 @@ const Navbar: React.FC<NavbarProps> = ({ onOpenInquiry }) => {
       >
         <div className="container mx-auto px-6 flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3">
-            <img src="/assurant-logo.png" alt="Assurant Home Loans" className="h-10 w-auto object-contain" />
-            <span className="hidden sm:inline font-serif text-lg font-semibold tracking-wider text-navy-900">
-              ASSURANT <span className="text-brand-600">HOME LOANS</span>
-            </span>
+          <Link to="/" className="flex items-center">
+            <img src="/assurant-logo.svg" alt="Assurant Home Loans" className="h-10 lg:h-12 w-auto object-contain" />
           </Link>
 
           {/* Desktop Links */}
-          <div className="hidden lg:flex items-center gap-0.5">
+          <div className="hidden lg:flex items-center gap-1">
             {navLinks.map((link) => (
-              <div 
-                key={link.name} 
-                className="relative group"
-                onMouseEnter={() => setActiveDropdown(link.name)}
-                onMouseLeave={() => setActiveDropdown(null)}
-              >
-                <button className={`flex items-center gap-1 text-[11px] font-semibold uppercase tracking-[0.1em] px-3 py-2 rounded-lg transition-colors ${
-                  isActive(link.href) 
-                    ? 'text-brand-700' 
-                    : 'text-navy-700 hover:text-brand-600'
-                }`}>
-                  {link.name}
-                  <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${activeDropdown === link.name ? 'rotate-180' : ''}`} />
-                </button>
+              link.children ? (
+                <div 
+                  key={link.name} 
+                  className="relative group"
+                  onMouseEnter={() => setActiveDropdown(link.name)}
+                  onMouseLeave={() => setActiveDropdown(null)}
+                >
+                  <button className={`flex items-center gap-1 text-[12px] font-semibold uppercase tracking-[0.08em] px-4 py-2 rounded-lg transition-colors ${
+                    isActive(link.href) 
+                      ? 'text-brand-700' 
+                      : 'text-navy-700 hover:text-brand-600'
+                  }`}>
+                    {link.name}
+                    <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeDropdown === link.name ? 'rotate-180' : ''}`} />
+                  </button>
 
-                {isActive(link.href) && (
-                  <div className="absolute bottom-0 left-3 right-3 h-0.5 bg-brand-500 rounded-full" />
-                )}
+                  {isActive(link.href) && (
+                    <div className="absolute bottom-0 left-4 right-4 h-0.5 bg-brand-500 rounded-full" />
+                  )}
 
-                <AnimatePresence>
-                  {activeDropdown === link.name && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 8, scale: 0.98 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 8, scale: 0.98 }}
-                      transition={{ duration: 0.15 }}
-                      className="absolute top-full left-0 w-56 bg-white shadow-xl shadow-navy-900/8 rounded-2xl p-3 border border-warm-stone/50 mt-1"
-                    >
-                      <div className="flex flex-col gap-0.5">
+                  <AnimatePresence>
+                    {activeDropdown === link.name && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                        transition={{ duration: 0.15 }}
+                        className={`absolute top-full left-0 bg-white shadow-xl shadow-navy-900/8 rounded-2xl p-3 border border-warm-stone/50 mt-1 ${
+                          link.name === 'Loan Programs' ? 'w-[480px] grid grid-cols-2 gap-0.5' : 'w-56 flex flex-col gap-0.5'
+                        }`}
+                      >
                         {link.children.map((child) => (
                           <Link
                             key={child.name}
@@ -146,15 +125,27 @@ const Navbar: React.FC<NavbarProps> = ({ onOpenInquiry }) => {
                             {child.name}
                           </Link>
                         ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ) : (
+                <Link
+                  key={link.name}
+                  to={link.href}
+                  className={`text-[12px] font-semibold uppercase tracking-[0.08em] px-4 py-2 rounded-lg transition-colors ${
+                    location.pathname === link.href
+                      ? 'text-brand-700'
+                      : 'text-navy-700 hover:text-brand-600'
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              )
             ))}
             
-            <a href="tel:9402069406" className="hidden xl:flex items-center gap-2 text-xs font-semibold text-navy-600 hover:text-brand-600 transition-colors ml-2">
-              <Phone className="w-3.5 h-3.5" />
+            <a href="tel:9402069406" className="flex items-center gap-2 text-xs font-semibold text-navy-600 hover:text-brand-600 transition-colors ml-3">
+              <Phone className="w-4 h-4" />
               940-206-9406
             </a>
 
@@ -195,24 +186,39 @@ const Navbar: React.FC<NavbarProps> = ({ onOpenInquiry }) => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: groupIndex * 0.06 }}
                   >
-                    <h4 className="text-[10px] font-semibold uppercase tracking-[0.2em] text-brand-600 border-b border-brand-100 pb-3">
-                      {link.name}
-                    </h4>
-                    <div className="grid grid-cols-1 gap-4">
-                      {link.children.map((child) => (
-                        <Link
-                          key={child.name}
-                          to={child.href}
-                          className={`text-xl font-serif transition-colors ${
-                            location.pathname === child.href 
-                              ? 'text-brand-600' 
-                              : 'text-navy-800 hover:text-brand-600'
-                          }`}
-                        >
-                          {child.name}
-                        </Link>
-                      ))}
-                    </div>
+                    {link.children ? (
+                      <>
+                        <h4 className="text-[10px] font-semibold uppercase tracking-[0.2em] text-brand-600 border-b border-brand-100 pb-3">
+                          {link.name}
+                        </h4>
+                        <div className="grid grid-cols-1 gap-4">
+                          {link.children.map((child) => (
+                            <Link
+                              key={child.name}
+                              to={child.href}
+                              className={`text-xl font-serif transition-colors ${
+                                location.pathname === child.href 
+                                  ? 'text-brand-600' 
+                                  : 'text-navy-800 hover:text-brand-600'
+                              }`}
+                            >
+                              {child.name}
+                            </Link>
+                          ))}
+                        </div>
+                      </>
+                    ) : (
+                      <Link
+                        to={link.href}
+                        className={`text-2xl font-serif block transition-colors ${
+                          location.pathname === link.href 
+                            ? 'text-brand-600' 
+                            : 'text-navy-800 hover:text-brand-600'
+                        }`}
+                      >
+                        {link.name}
+                      </Link>
+                    )}
                   </motion.div>
                 ))}
                 <div className="pt-4 space-y-4">

@@ -17,12 +17,6 @@ const Home: React.FC = () => {
       <TrustIndicators />
       <Services onOpenInquiry={openInquiry} />
       <div className="py-6 md:py-10" />
-      <ReviewsCarousel 
-        title="Don't take our word for it"
-        subtitle="Every review is from a verified Google client. 5.0 stars across 13 reviews — zero complaints."
-        variant="light"
-      />
-      <div className="py-6 md:py-10" />
       <Portfolio />
       <div className="py-6 md:py-10" />
       <ValueStack />
@@ -31,8 +25,6 @@ const Home: React.FC = () => {
         title="Trusted by homeowners across Texas"
         subtitle="From first-time buyers to seasoned investors, our clients consistently highlight speed, transparency, and competitive rates."
         variant="dark"
-        showStats={false}
-        count={8}
       />
       <div className="py-6 md:py-10" />
       <OverseasSection onOpenInquiry={openInquiry} />
